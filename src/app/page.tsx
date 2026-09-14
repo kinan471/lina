@@ -1,12 +1,10 @@
-import Navbar from '@/components/Navbar';
-import { getProducts } from '@/lib/db';
+'use client';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Suspense } from 'react';
-
-// Client-side wrapper for animations to keep the page a Server Component
+import Navbar from '@/components/Navbar';
+import { motion } from 'framer-motion';
 import ProductCard from '@/components/ProductCard';
-
-export const revalidate = 3600; // ISR: Regenerate page every hour
+import { Product } from '@/types/product';
 
 const SectionTitle = ({ title, subtitle }: { title: string, subtitle: string }) => (
   <div className="text-center mb-20 space-y-4">
@@ -16,15 +14,24 @@ const SectionTitle = ({ title, subtitle }: { title: string, subtitle: string }) 
   </div>
 );
 
-export default async function HomePage() {
-  const products = await getProducts();
+export default function HomePage() {
+  const [products, setProducts] = useState<Product[]>([]);
+  const [filter, setFilter] = useState('Tümü');
+
+  useEffect(() => {
+    fetch('/api/products')
+      .then(res => res.json())
+      .then((data: Product[]) => setProducts(data))
+      .catch(err => console.error(err));
+  }, []);
+
   const categories = ['Tümü', ...new Set(products.map(p => p.category))];
+  const filteredProducts = filter === 'Tümü' ? products : products.filter(p => p.category === filter);
 
   return (
     <div className="min-h-screen bg-white text-right selection:bg-[#B89B72]/30" dir="rtl">
       <Navbar />
       
-      {/* Hero Section: High-Status Entry */}
       <section className="relative h-screen flex items-center justify-center overflow-hidden bg-[#0A0A0A]">
         <div className="absolute inset-0 z-0">
           <img src="/hero.jpg" alt="Lina" className="w-full h-full object-cover opacity-60 scale-105 transition-transform duration-[10s] hover:scale-100" />
@@ -33,8 +40,13 @@ export default async function HomePage() {
         </div>
 
         <div className="container mx-auto px-8 relative z-10 text-center space-y-8">
-          <div className="space-y-6">
-            <span className="text-white/60 text-[12px] uppercase tracking-[0.5em] block animate-fade-in">The New Era of Beauty</span>
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1 }}
+            className="space-y-6"
+          >
+            <span className="text-white/60 text-[12px] uppercase tracking-[0.5em] block">The New Era of Beauty</span>
             <h1 className="text-6xl md:text-9xl font-light text-white leading-none tracking-tighter">
               LINA <br /> 
               <span className="font-serif italic text-[#B89B72]">STUDIO</span>
@@ -47,11 +59,10 @@ export default async function HomePage() {
                 Koleksiyonu Keşfet
               </a>
             </div>
-          </div>
+          </motion.div>
         </div>
       </section>
 
-      {/* Philosophy: Identity & Desire */}
       <section className="py-32 bg-[#0A0A0A] text-white overflow-hidden">
         <div className="container mx-auto px-8 grid lg:grid-cols-2 gap-20 items-center">
           <div className="relative group order-2 lg:order-1">
@@ -71,7 +82,6 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Trust Section: The Authority (Bernays Style) */}
       <section className="py-20 bg-[#FDFCFB] border-y border-gray-100">
         <div className="container mx-auto px-8 grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
           <div className="space-y-4">
@@ -92,27 +102,26 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Products: The Collection */}
       <section id="products" className="py-32 bg-white">
         <div className="container mx-auto px-8">
           <SectionTitle title="Seçkin Koleksiyon" subtitle="Curated Selection" />
 
           <div className="flex justify-center gap-4 mb-20 overflow-x-auto pb-4 no-scrollbar">
             {categories.map(cat => (
-              <Link 
+              <button 
                 key={cat} 
-                href={`/?category=${cat}`}
+                onClick={() => setFilter(cat)}
                 className={`px-8 py-2 text-[10px] uppercase tracking-widest transition-all duration-500 rounded-full border ${
-                  cat === 'Tümü' ? 'bg-black text-white border-black' : 'bg-transparent text-gray-400 border-gray-200 hover:border-black hover:text-black'
+                  filter === cat ? 'bg-black text-white border-black' : 'bg-transparent text-gray-400 border-gray-200 hover:border-black hover:text-black'
                 }`}
               >
                 {cat}
-              </Link>
+              </button>
             ))}
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-24">
-            {products.map(product => (
+            {filteredProducts.map(product => (
               <ProductCard key={product.id} product={product} />
             ))}
           </div>
