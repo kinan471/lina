@@ -67,7 +67,7 @@ export default function HomePage() {
         <div className="container mx-auto px-6 md:px-8 grid lg:grid-cols-2 gap-12 md:gap-20 items-center">
           <div className="relative group order-2 lg:order-1">
             <div className="absolute -inset-4 bg-[#B89B72]/20 rounded-full blur-3xl group-hover:bg-[#B89B72]/30 transition duration-1000" />
-            <img src="/influencer.jpg" alt="Philosophy" className="relative rounded-2xl shadow-2xl grayscale hover:grayscale-0 transition duration-1000 w-full max-w-sm md:max-w-md mx-auto" />
+            <img src="/influencer.jpg" alt="Philosophy" className="relative rounded-2xl shadow-2xl grayscale md:grayscale hover:grayscale-0 transition duration-1000 w-full max-w-sm md:max-w-md mx-auto" />
           </div>
           <div className="space-y-6 md:space-y-8 text-right order-1 lg:order-2">
             <h2 className="text-3xl md:text-6xl font-light leading-tight">

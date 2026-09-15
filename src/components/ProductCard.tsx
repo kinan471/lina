@@ -21,15 +21,17 @@ export default function ProductCard({ product }: { product: any }) {
             Sınırlı Stok
           </span>
         </div>
-        <div className="absolute bottom-8 right-8 left-8 translate-y-12 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500">
-          <Link href={`/${product.id}`} className="block w-full bg-white text-black text-center py-4 text-[10px] uppercase tracking-widest font-bold hover:bg-black hover:text-white transition-all duration-300 shadow-xl">
+        
+        {/* FIX: Button always visible on mobile, slides up on desktop */}
+        <div className="absolute bottom-4 right-4 left-4 md:bottom-8 md:right-8 md:left-8 translate-y-0 opacity-100 md:translate-y-12 md:opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500">
+          <Link href={`/${product.id}`} className="block w-full bg-white text-black text-center py-3 md:py-4 text-[9px] md:text-[10px] uppercase tracking-widest font-bold hover:bg-black hover:text-white transition-all duration-300 shadow-xl">
             Ürünü İncele
           </Link>
         </div>
       </div>
       <div className="flex justify-between items-start gap-4">
         <div className="space-y-2 text-right">
-          <h3 className="text-xl font-light text-[#121212] tracking-tight group-hover:text-[#B89B72] transition-colors duration-300">{product.name}</h3>
+          <h3 className="text-lg md:text-xl font-light text-[#121212] tracking-tight group-hover:text-[#B89B72] transition-colors duration-300">{product.name}</h3>
           <p className="text-xs text-gray-400 font-light leading-relaxed line-clamp-2">{product.description}</p>
         </div>
         <span className="text-sm font-medium text-[#B89B72]">{product.price} TL</span>
